@@ -5,7 +5,7 @@ namespace Icetalker\FilamentChatgptBot\Components;
 use Icetalker\FilamentChatgptBot\OpenAI;
 use Livewire\Component;
 
-class ChatgptBot extends Component
+class ChatgptAgent extends Component
 {
 
     public string $name;

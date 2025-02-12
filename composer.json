@@ -1,26 +1,19 @@
 {
-    "name": "icetalker/filament-chatgpt-bot",
+    "name": "likeabas/filament-chatgpt-bot",
     "description": "Integrate with OpenAI ChatGPT",
+    "version": "1.0.0",
     "keywords": [
-        "icetalker",
+        "likeabas",
         "laravel",
         "filament-chatgpt-bot"
     ],
-    "homepage": "https://github.com/icetalker/filament-chatgpt-bot",
+    "homepage": "https://github.com/likeabas/filament-chatgpt-bot",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Martin Hwang",
-            "email": "termlong.com@gmail.com",
-            "role": "Developer"
-        }
-    ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "spatie/laravel-package-tools": "^1.14.0",
         "illuminate/contracts": "^9.0|^10.0|^11.0",
-        "livewire/livewire": "^3.0",
-        "orhanerday/open-ai": "^4.7|^5.0"
+        "livewire/livewire": "^3.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
@@ -36,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Icetalker\\FilamentChatgptBot\\": "src"
+            "LikeABas\\FilamentChatgptAgent\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Icetalker\\FilamentChatgptBot\\Tests\\": "tests"
+            "LikeABas\\FilamentChatgptAgent\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -61,10 +54,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Icetalker\\FilamentChatgptBot\\FilamentChatgptBotServiceProvider"
+                "LikeABas\\FilamentChatgptAgent\\FilamentChatgptAgentServiceProvider"
             ],
             "aliases": {
-                "FilamentChatgptBot": "Icetalker\\FilamentChatgptBot\\Facades\\FilamentChatgptBot"
+                "FilamentChatgptAgent": "LikeABas\\FilamentChatgptAgent\\Facades\\FilamentChatgptAgent"
             }
         }
     },

@@ -25,13 +25,7 @@ Light Mode:
 First, you can install the package via composer:
 
 ```bash
-composer require icetalker/filament-chatgpt-bot
-```
-
-For Filament V2, Please lock the the version to v0.1.*:
-
-```bash
-composer require icetaker/filament-chatgpt-bot:"v0.1.3"
+composer require likeabas/filament-chatgpt-agent
 ```
 
 ## Publish Config Files
