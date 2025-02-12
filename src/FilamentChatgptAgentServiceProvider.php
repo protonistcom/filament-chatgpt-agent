@@ -4,9 +4,7 @@ namespace LikeABas\FilamentChatgptAgent;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Filament\Support\Facades\FilamentView;
-use Illuminate\Support\Facades\Blade;
-use LikeABas\FilamentChatgptAgentComponents\ChatgptAgent;
+use LikeABas\FilamentChatgptAgent\Components\ChatgptAgent;
 use Livewire\Livewire;
 
 class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
@@ -43,7 +41,7 @@ class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-chatgpt-agent'),
-        ], 'filament-chatgpt-bot-views');
+        ], 'filament-chatgpt-agent-views');
     }
 
 }

@@ -1,14 +1,19 @@
 <?php
 
-namespace Icetalker\FilamentChatgptBot\Components;
+namespace LikeABas\FilamentChatgptAgent\Components;
 
-use Icetalker\FilamentChatgptBot\OpenAI;
 use Livewire\Component;
 
 class ChatgptAgent extends Component
 {
 
     public string $name;
+
+    public string $buttonText;
+
+    public string $buttonIcon;
+
+    public string $sendingText;
 
     public array $messages;
 
@@ -24,38 +29,28 @@ class ChatgptAgent extends Component
 
     private string $sessionKey;
 
-    protected $listeners = [
-        //shortcut
-        'ctrl+s' => 'sendMessage',
-        'ctrl+r' => 'changeWinWidth',
-        'ctrl+p' => 'changeWinPosition',
-        'ctrl+d' => 'resetSession',
-        'ctrl+alt+z' => 'togglePanel',
-    ];
-
     public function __construct()
     {
-        $this->sessionKey = auth()->id() . '-messages';
+        $this->sessionKey = auth()->id() . '-chatgpt-agent-messages';
     }
 
     public function mount(): void
     {
         $this->panelHidden = true;
-        $this->winWidth = "width:350px;";
+        $this->winWidth = "width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";";
         $this->winPosition = "";
         $this->showPositionBtn = true;
         $this->messages = session($this->sessionKey, []);
         $this->question = "";
+        $this->name = filament('chatgpt-agent')->getBotName();
+        $this->buttonText = filament('chatgpt-agent')->getButtonText();
+        $this->buttonIcon = filament('chatgpt-agent')->getButtonIcon();
+        $this->sendingText = filament('chatgpt-agent')->getSendingText();
     }
 
     public function render()
     {
-        return view('filament-chatgpt-bot::livewire.chat-bot');
-    }
-
-    public function name(): void
-    {
-        $this->name =  config('filament-chatgpt-bot.botname') ?? 'ChatGPT';
+        return view('filament-chatgpt-agent::livewire.chat-bot');
     }
 
     public function sendMessage(): void
@@ -76,11 +71,11 @@ class ChatgptAgent extends Component
 
     public function changeWinWidth(): void
     {
-        if($this->winWidth=="width:350px;"){
+        if($this->winWidth=="width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";"){
             $this->winWidth = "width:100%;";
             $this->showPositionBtn = false;
         }else{
-            $this->winWidth = "width:350px;";
+            $this->winWidth = "width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";";
             $this->showPositionBtn = true;
         }
     }
@@ -108,21 +103,16 @@ class ChatgptAgent extends Component
     protected function chat(): void
     {
 
-        $client = OpenAI::client();
+        // if($response){
+        //     $response = json_decode($response);
+        // }
 
-        $response = $client->chat([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => $this->messages
-        ]);
-        if($response){
-            $response = json_decode($response);
-        }
-
-        if (@$response->error) {
-            $this->messages[] = ['role' => 'assistant', 'content' => $response->error->message];
-        } else {
-            $this->messages[] = ['role' => 'assistant', 'content' => @$response->choices[0]->message->content];
-        }
+        // if (@$response->error) {
+        //     $this->messages[] = ['role' => 'assistant', 'content' => $response->error->message];
+        // } else {
+        //     $this->messages[] = ['role' => 'assistant', 'content' => @$response->choices[0]->message->content];
+        // }
+        $this->messages[] = ['role' => 'assistant', 'content' => 'test response!'];
 
         request()->session()->put($this->sessionKey, $this->messages);
 

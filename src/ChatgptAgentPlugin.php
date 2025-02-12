@@ -4,13 +4,22 @@ namespace LikeABas\FilamentChatgptAgent;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Illuminate\Support\Facades\Blade;
  
 class ChatgptAgentPlugin implements Plugin
 {
-    protected string $model;
-    protected string $systemMessage;
-    protected array $functions;
+    protected string $botName = 'ChatGPT Agent';
+    protected string $buttonText = 'Ask ChatGPT';
+    protected string $buttonIcon = 'heroicon-m-sparkles';
+    protected string $sendingText = 'Sending...';
+    protected string $model = 'gpt-4o';
+    protected string $systemMessage = '';
+    protected array $functions = [];
+    protected string $defaultPanelWidth = '350px';
+
+    public static function make(): static
+    {
+        return app(static::class);
+    }
 
     public function getId(): string
     {
@@ -22,13 +31,61 @@ class ChatgptAgentPlugin implements Plugin
         $panel
             ->renderHook(
                 'panels::body.end',
-                fn (): string => auth()->check() ? Blade::render('@livewire(\'filament-chatgpt-agent\')'):'',
+                fn () => auth()->check() ? view('filament-chatgpt-agent::components.filament-chatgpt-agent') : '',
             );
     }
  
     public function boot(Panel $panel): void
     {
         //
+    }
+
+    public function botName(string $name): static
+    {
+        $this->botName = $name;
+
+        return $this;
+    }
+
+    public function getBotName(): string
+    {
+        return $this->botName;
+    }
+
+    public function buttonText(string $text): static
+    {
+        $this->buttonText = $text;
+
+        return $this;
+    }
+
+    public function getButtonText(): string
+    {
+        return $this->buttonText;
+    }
+
+    public function buttonIcon(string $icon): static
+    {
+        $this->buttonIcon = $icon;
+
+        return $this;
+    }
+
+    public function getButtonIcon(): string
+    {
+        return $this->buttonIcon;
+    }
+
+    public function sendingText(string $text): static
+    {
+        $this->sendingText = $text;
+
+        return $this;
+    }
+
+    public function getSendingText(): string
+    {
+        return $this->sendingText;
     }
 
     public function model(string $model): static
@@ -65,5 +122,17 @@ class ChatgptAgentPlugin implements Plugin
     public function getFunctions(): array
     {
         return $this->functions;
+    }
+
+    public function defaultPanelWidth(string $width): static
+    {
+        $this->defaultPanelWidth = $width;
+
+        return $this;
+    }
+
+    public function getDefaultPanelWidth(): string
+    {
+        return $this->defaultPanelWidth;
     }
 }
