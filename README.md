@@ -1,17 +1,9 @@
-# ChatGPT Intergration 
+# ChatGPT Agent for Filament
 
 Filament ChatGPT Agent is a filament plugin that allow you to easily integrate ChatGPT in your Filament project, and allowing ChatGPT to access context information from your project by creating GPT functions.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
-
-## Feature
-
-- Integrate with ChatGPT
-- Easy to Setup
-- Shortcut allows control of panel in more convenient way
-- Support for dark mode
-
 
 ## Installation
 
