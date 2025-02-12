@@ -1,16 +1,9 @@
 # ChatGPT Intergration 
 
-Filament ChatGPT Bot is a filament plugin that allow you to use ChatGPT out of the box within Filament Application. 
+Filament ChatGPT Agent is a filament plugin that allow you to easily integrate ChatGPT in your Filament project, and allowing ChatGPT to access context information from your project by creating GPT functions.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
 [![Total Downloads](https://img.shields.io/packagist/dt/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
-
-Preview:
-![](https://raw.githubusercontent.com/icetalker/filament-chatgpt-bot/main/screenshot/dark-mode.png)
-Full Screen:
-![](https://raw.githubusercontent.com/icetalker/filament-chatgpt-bot/main/screenshot/full-screen.png)
-Light Mode:
-![](https://raw.githubusercontent.com/icetalker/filament-chatgpt-bot/main/screenshot/light-mode.png)
 
 ## Feature
 
@@ -22,32 +15,25 @@ Light Mode:
 
 ## Installation
 
-First, you can install the package via composer:
+You need to have [Laravel GPT from Malkuhr](https://github.com/maltekuhr/laravel-gpt) installed to use this package. If you haven't done so, do so by following the [installation instructions](https://github.com/maltekuhr/laravel-gpt?tab=readme-ov-file#installation):
+
+You can install the package via composer:
+
+```bash
+composer require maltekuhr/laravel-gpt
+```
+
+Next you need to configure your OpenAI API Key and Organization ID. You can find both in the [OpenAI Dashboard](https://platform.openai.com/account/org-settings).
+
+```dotenv
+OPENAI_ORGANIZATION=YOUR_ORGANIZATION_ID
+OPENAI_API_KEY=YOUR_API_KEY
+```
+
+Now you can install this package via composer:
 
 ```bash
 composer require likeabas/filament-chatgpt-agent
-```
-
-## Publish Config Files
-
-Next, you can publish the config files with:
-
-```bash
-php artisan vendor:publish --tag="filament-chatgpt-bot-config"
-```
-
-This will create a `config/filament-chatgpt-bot.php` configuration file in your project, which you can modify to your needs using environment variables:
-
-```
-OPENAI_API_KEY=sk-...
-```
-
-Go to admin panel, you will see a small icon in gray color on the bottom-right corner of every page. Click the icon, you will then see a chat panel. And now you can talk to OpenAI ChatGPT with the chat panel. Click the small icon again, the chat panel will become hidden again.
-
-By optionally adding the `OPENAI_PROXY` to `.env` file, you could use http proxy to connect ChatGPT. Example as below:
-
-```
-OPENAI_PROXY=127.0.0.1:8080
 ```
 
 ## Views
@@ -55,49 +41,77 @@ OPENAI_PROXY=127.0.0.1:8080
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag="filament-chatgpt-bot-views"
+php artisan vendor:publish --tag="filament-chatgpt-agent-views"
 ```
 
-## More
+## Translations
 
-1. By defult, there is a small chatgpt icon on bottom-right corner of admin panel after the package installed. You could hide the icon by setting `enable` to `false` in `config/filament-chatgpt-bot.php` files:
+Optionally, you can publish translations using
+
+```bash
+php artisan vendor:publish --tag="filament-chatgpt-agent-translations"
+```
+
+## Usage
+
+1. You need to add the plugin to your Filament [Panel Configuration](https://laravel-filament.cn/docs/en/3.x/panels/configuration).
 
 ```php
 
-    'enable' => false,
-
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ...
+            ->plugin(
+                ChatgptAgentPlugin::make()
+            )
+            ...
+    }
 ```
 
-> This may require you publish [config files](#publish-config-files).
-
-2. You could also render it in [Panel Configuration](https://laravel-filament.cn/docs/en/3.x/panels/configuration#render-hooks) like this：
+2. You can also set some options if you like:
 
 ```php
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        // ...
-        ->renderHook(
-            'panels::body.end',
-            fn (): string => auth()->check() ? Blade::render('@livewire(\'livewire-ui-modal\')') : '',
-        );
-}
+
+use App\GPT\Functions\YourCustomGPTFunction;
+
+...
+
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ...
+            ->plugin(
+                ChatgptAgentPlugin::make()
+                    ->defaultPanelWidth('400px') // default 350px
+                    ->botName('GPT Assistant')
+                    ->model('gpt-4o')
+                    ->buttonText('Ask ChatGPT')
+                    ->buttonIcon('heroicon-m-sparkles')
+                    ->systemMessage('Act nice and help') // System instructions for the GPT
+                    ->functions([ // Array of GPTFunctions the GPT can use
+                        new YourCustomGPTFunction(),
+                    ])
+                    ->startMessage('Hello sir! How can I help you today?') // Default start message, set to false to not show a message
+            )
+            ...
+    }
 ```
 
-> Set `enable` in `config/filament-chatgpt-bot.php` files, if you like to render it in [Panel Configuration](https://laravel-filament.cn/docs/en/3.x/panels/configuration#render-hooks).
+> Other language strings can be altered in the translations file. Just [publish the translations](#translations).
 
-3. Alternatively, you can add it to any blade file within livewire page if you like to do it manually:
+4. You can add it to any blade file if you like:
 
 ```blade
 <body>
 
     ...
 
-    @livewire('filament-chatgpt-bot')
+    @livewire('filament-chatgpt-agent')
 </body>
 ```
 
-> This is work for all livewire page in any Laravel Project, not just Filament. Please also make sure Tailwind CSS and Livewire were imported properly while use in other Laravel Project. And please note that you should also set `enable` to be `false` in `config/filament-chatgpt-bot.php` files while use this in non-Filament Project.
+> This is work for all livewire page in any Laravel Project, not just Filament. Please also make sure Tailwind CSS, Filament and Livewire were imported properly while use in other Laravel Project.
 
 ## Changelog
 
@@ -109,9 +123,6 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Martin Hwang](https://github.com/icetalker)
+- Package created by [Bas Schleijpen](https://github.com/likeabas).
+- The view and livewire component structure was inspired by [Martin Hwang](https://github.com/icetalker).
 - [All Contributors](../../contributors)
-
-## Support
-
-Any Problem please email: martin.hwang@outlook.com.

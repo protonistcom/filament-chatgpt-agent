@@ -18,6 +18,7 @@ class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('filament-chatgpt-agent')
+            ->hasTranslations()
             ->hasViews();
     }
 
@@ -35,6 +36,7 @@ class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
     protected function bootLoaders()
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-chatgpt-agent');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-chatgt-agent');
     }
 
     protected function bootPublishing()

@@ -1,20 +1,28 @@
 <?php
- 
+
 namespace LikeABas\FilamentChatgptAgent;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
- 
+
 class ChatgptAgentPlugin implements Plugin
 {
-    protected string $botName = 'ChatGPT Agent';
-    protected string $buttonText = 'Ask ChatGPT';
+    protected string $botName;
+    protected string $buttonText;
     protected string $buttonIcon = 'heroicon-m-sparkles';
-    protected string $sendingText = 'Sending...';
+    protected string $sendingText;
     protected string $model = 'gpt-4o';
     protected string $systemMessage = '';
     protected array $functions = [];
     protected string $defaultPanelWidth = '350px';
+    protected string|bool $startMessage = false;
+
+    public function __construct()
+    {
+        $this->botName = __('filament-chatgt-agent::translations.bot_name');
+        $this->buttonText = __('filament-chatgt-agent::translations.button_text');
+        $this->sendingText = __('filament-chatgt-agent::translations.sending_text');
+    }
 
     public static function make(): static
     {
@@ -25,7 +33,7 @@ class ChatgptAgentPlugin implements Plugin
     {
         return 'chatgpt-agent';
     }
- 
+
     public function register(Panel $panel): void
     {
         $panel
@@ -34,7 +42,7 @@ class ChatgptAgentPlugin implements Plugin
                 fn () => auth()->check() ? view('filament-chatgpt-agent::components.filament-chatgpt-agent') : '',
             );
     }
- 
+
     public function boot(Panel $panel): void
     {
         //
@@ -134,5 +142,17 @@ class ChatgptAgentPlugin implements Plugin
     public function getDefaultPanelWidth(): string
     {
         return $this->defaultPanelWidth;
+    }
+
+    public function startMessage(string|bool $message): static
+    {
+        $this->startMessage = ($message === false || $message === '') ? false : $message;
+
+        return $this;
+    }
+
+    public function getStartMessage(): string
+    {
+        return $this->startMessage;
     }
 }

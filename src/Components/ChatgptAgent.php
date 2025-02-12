@@ -2,6 +2,7 @@
 
 namespace LikeABas\FilamentChatgptAgent\Components;
 
+use LikeABas\FilamentChatgptAgent\ChatgptChat;
 use Livewire\Component;
 
 class ChatgptAgent extends Component
@@ -36,11 +37,14 @@ class ChatgptAgent extends Component
 
     public function mount(): void
     {
-        $this->panelHidden = true;
+        $this->panelHidden = session($this->sessionKey . '-panelHidden', true);
         $this->winWidth = "width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";";
-        $this->winPosition = "";
+        $this->winPosition = session($this->sessionKey . '-winPosition', '');
         $this->showPositionBtn = true;
-        $this->messages = session($this->sessionKey, []);
+        $this->messages = session(
+            $this->sessionKey,
+            $this->getDefaultMessages()
+        );
         $this->question = "";
         $this->name = filament('chatgpt-agent')->getBotName();
         $this->buttonText = filament('chatgpt-agent')->getButtonText();
@@ -55,7 +59,7 @@ class ChatgptAgent extends Component
 
     public function sendMessage(): void
     {
-        if(empty(trim($this->question))){
+        if (empty(trim($this->question))) {
             $this->question = "";
             return;
         }
@@ -64,17 +68,17 @@ class ChatgptAgent extends Component
             "content" => $this->question,
         ];
 
-        $this->dispatch('sendmessage', ['message' => $this->question]);
-        $this->question = "";
         $this->chat();
+        $this->question = "";
+        $this->dispatch('sendmessage', ['message' => $this->question]);
     }
 
     public function changeWinWidth(): void
     {
-        if($this->winWidth=="width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";"){
+        if ($this->winWidth == "width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";") {
             $this->winWidth = "width:100%;";
             $this->showPositionBtn = false;
-        }else{
+        } else {
             $this->winWidth = "width:" . filament('chatgpt-agent')->getDefaultPanelWidth() . ";";
             $this->showPositionBtn = true;
         }
@@ -82,40 +86,43 @@ class ChatgptAgent extends Component
 
     public function changeWinPosition(): void
     {
-        if($this->winPosition != "left"){
+        if ($this->winPosition != "left") {
             $this->winPosition = "left";
-        }else{
+        } else {
             $this->winPosition = "";
         }
+        session([$this->sessionKey . '-winPosition' => $this->winPosition]);
     }
 
     public function resetSession(): void
     {
         request()->session()->forget($this->sessionKey);
-        $this->messages = [];
+        $this->messages = $this->getDefaultMessages();
     }
 
     public function togglePanel(): void
     {
         $this->panelHidden = !$this->panelHidden;
+        session([$this->sessionKey . '-panelHidden' => $this->panelHidden]);
     }
 
     protected function chat(): void
     {
+        $chat = new ChatgptChat();
+        $chat->loadMessages($this->messages);
+        $chat->send();
 
-        // if($response){
-        //     $response = json_decode($response);
-        // }
-
-        // if (@$response->error) {
-        //     $this->messages[] = ['role' => 'assistant', 'content' => $response->error->message];
-        // } else {
-        //     $this->messages[] = ['role' => 'assistant', 'content' => @$response->choices[0]->message->content];
-        // }
-        $this->messages[] = ['role' => 'assistant', 'content' => 'test response!'];
+        $this->messages[] = ['role' => 'assistant', 'content' => $chat->latestMessage()->content];
 
         request()->session()->put($this->sessionKey, $this->messages);
 
     }
 
+    protected function getDefaultMessages(): array
+    {
+        return filament('chatgpt-agent')->getStartMessage() ?
+            [
+                ['role' => 'assistant', 'content' => filament('chatgpt-agent')->getStartMessage()],
+            ] : [];
+    }
 }
