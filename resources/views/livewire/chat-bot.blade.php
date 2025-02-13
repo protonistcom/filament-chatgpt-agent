@@ -1,7 +1,7 @@
 <div class="relative w-full" id="chatgpt-agent-window" style="{{ $winWidth }}">
     <div class="fixed z-30 cursor-pointer" style="bottom: 1rem; right: 1rem;">
         <x-filament::button wire:click="togglePanel" id="btn-chat" :icon="$buttonIcon" :color="$panelHidden ? 'primary' : 'gray'">
-            {{ $panelHidden ? $buttonText : __('filament-chatgt-agent::translations.close') }}
+            {{ $panelHidden ? $buttonText : __('chatgpt-agent::translations.close') }}
         </x-filament::button>
     </div>
 
@@ -14,16 +14,19 @@
 
         <x-slot name="headerEnd">
             <x-filament::icon-button color="gray" icon="heroicon-o-document" wire:click="resetSession()"
-                label="{{ __('filament-chatgt-agent::translations.new_session') }}" tooltip="{{ __('filament-chatgt-agent::translations.new_session') }}" />
-            <x-filament::icon-button color="gray" :icon="$winWidth != 'width:100%;' ? 'heroicon-m-arrows-pointing-out' : 'heroicon-m-arrows-pointing-in'"
-                wire:click="changeWinWidth()"
-                label="{{ __('filament-chatgt-agent::translations.toggle_full_screen') }}" tooltip="{{ __('filament-chatgt-agent::translations.toggle_full_screen') }}" />
+                label="{{ __('chatgpt-agent::translations.new_session') }}"
+                tooltip="{{ __('chatgpt-agent::translations.new_session') }}" />
+            <x-filament::icon-button color="gray" :icon="$winWidth != 'width:100%;' ? 'heroicon-m-arrows-pointing-out' : 'heroicon-m-arrows-pointing-in'" wire:click="changeWinWidth()"
+                label="{{ __('chatgpt-agent::translations.toggle_full_screen') }}"
+                tooltip="{{ __('chatgpt-agent::translations.toggle_full_screen') }}" />
             @if ($showPositionBtn)
                 <x-filament::icon-button color="gray" icon="heroicon-s-arrows-right-left"
-                    wire:click="changeWinPosition()" label="{{ __('filament-chatgt-agent::translations.move_window') }}" tooltip="{{ __('filament-chatgt-agent::translations.move_window') }}" />
+                    wire:click="changeWinPosition()" label="{{ __('chatgpt-agent::translations.move_window') }}"
+                    tooltip="{{ __('chatgpt-agent::translations.move_window') }}" />
             @endif
             <x-filament::icon-button color="gray" icon="heroicon-s-minus-small" wire:click="togglePanel"
-                label="{{ __('filament-chatgt-agent::translations.hide_chat') }}" tooltip="{{ __('filament-chatgt-agent::translations.hide_chat') }}" />
+                label="{{ __('chatgpt-agent::translations.hide_chat') }}"
+                tooltip="{{ __('chatgpt-agent::translations.hide_chat') }}" />
         </x-slot>
 
         <div id="messages"
@@ -50,7 +53,7 @@
                                 </div>
                                 <div
                                     class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
-                                    <x-filament-chatgpt-agent::chatgpt-svg />
+                                    <x-chatgpt-agent::chatgpt-svg />
                                 </div>
                             </div>
                         </div>
@@ -79,12 +82,13 @@
                     <textarea wire:loading.attr="disabled" wire:target="sendMessage"
                         @keydown.enter="!$event.shiftKey && ($event.preventDefault(), $wire.sendMessage())" wire:model.defer="question"
                         tabindex="0" data-id="root" style="max-height: 200px; height: 24px; padding-right:40px;"
-                        placeholder="{{ __('filament-chatgt-agent::translations.send_a_message') }}" autofocus
+                        placeholder="{{ __('chatgpt-agent::translations.send_a_message') }}" autofocus
                         class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-7 focus:ring-0 focus:outline-none focus:placeholder-gray-400 dark:bg-transparent pl-2 md:pl-0"
                         id="chat-input"></textarea>
                     <div class="absolute bottom-1.5 md:bottom-2.5 right-1 md:right-2">
                         <x-filament::icon-button color="gray" icon="heroicon-o-paper-airplane" wire:loading.remove
-                            wire:target="sendMessage" wire:click="sendMessage" label="{{ __('filament-chatgt-agent::translations.send_message') }}" />
+                            wire:target="sendMessage" wire:click="sendMessage"
+                            label="{{ __('chatgpt-agent::translations.send_message') }}" />
                         <x-filament::loading-indicator wire:loading wire:target="sendMessage" size="md"
                             wire:target="sendMessage" />
                     </div>

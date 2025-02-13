@@ -1,24 +1,23 @@
 {
-    "name": "likeabas/filament-chatgpt-bot",
+    "name": "likeabas/filament-chatgpt-agent",
     "description": "Integrate with OpenAI ChatGPT",
     "version": "1.0.0",
     "keywords": [
         "likeabas",
         "laravel",
-        "filament-chatgpt-bot"
+        "filament-chatgpt-agent"
     ],
-    "homepage": "https://github.com/likeabas/filament-chatgpt-bot",
+    "homepage": "https://github.com/likeabas/filament-chatgpt-agent",
     "license": "MIT",
     "require": {
         "php": ">=8.0",
-        "spatie/laravel-package-tools": "^1.14.0",
+        "spatie/laravel-package-tools": "^1.9.2",
         "illuminate/contracts": "^9.0|^10.0|^11.0",
         "livewire/livewire": "^3.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^7.9|^8.1",
-        "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-arch": "^2.0",

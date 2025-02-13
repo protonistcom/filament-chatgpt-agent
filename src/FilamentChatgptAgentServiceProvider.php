@@ -2,10 +2,10 @@
 
 namespace LikeABas\FilamentChatgptAgent;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use LikeABas\FilamentChatgptAgent\Components\ChatgptAgent;
 use Livewire\Livewire;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
 {
@@ -17,7 +17,7 @@ class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('filament-chatgpt-agent')
+            ->name('chatgpt-agent')
             ->hasTranslations()
             ->hasViews();
     }
@@ -25,25 +25,9 @@ class FilamentChatgptAgentServiceProvider extends PackageServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function packageBooted(): void
     {
-        $this->bootLoaders();
-        $this->bootPublishing();
-
-        Livewire::component('filament-chatgpt-agent', ChatgptAgent::class);
-    }
-
-    protected function bootLoaders()
-    {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-chatgpt-agent');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'filament-chatgt-agent');
-    }
-
-    protected function bootPublishing()
-    {
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-chatgpt-agent'),
-        ], 'filament-chatgpt-agent-views');
+        Livewire::component('fi-chatgpt-agent', ChatgptAgent::class);
     }
 
 }

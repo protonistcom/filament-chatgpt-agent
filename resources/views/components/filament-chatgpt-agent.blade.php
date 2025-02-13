@@ -1,3 +1,3 @@
 <div>
-    @livewire('filament-chatgpt-agent')
+    @livewire('fi-chatgpt-agent')
 </div>

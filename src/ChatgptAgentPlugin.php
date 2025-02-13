@@ -17,13 +17,6 @@ class ChatgptAgentPlugin implements Plugin
     protected string $defaultPanelWidth = '350px';
     protected string|bool $startMessage = false;
 
-    public function __construct()
-    {
-        $this->botName = __('filament-chatgt-agent::translations.bot_name');
-        $this->buttonText = __('filament-chatgt-agent::translations.button_text');
-        $this->sendingText = __('filament-chatgt-agent::translations.sending_text');
-    }
-
     public static function make(): static
     {
         return app(static::class);
@@ -39,7 +32,7 @@ class ChatgptAgentPlugin implements Plugin
         $panel
             ->renderHook(
                 'panels::body.end',
-                fn () => auth()->check() ? view('filament-chatgpt-agent::components.filament-chatgpt-agent') : '',
+                fn () => auth()->check() ? view('chatgpt-agent::components.filament-chatgpt-agent') : '',
             );
     }
 
@@ -57,7 +50,7 @@ class ChatgptAgentPlugin implements Plugin
 
     public function getBotName(): string
     {
-        return $this->botName;
+        return $this->botName ?? __('chatgpt-agent::translations.bot_name');
     }
 
     public function buttonText(string $text): static
@@ -69,7 +62,7 @@ class ChatgptAgentPlugin implements Plugin
 
     public function getButtonText(): string
     {
-        return $this->buttonText;
+        return $this->buttonText ?? __('chatgpt-agent::translations.button_text');
     }
 
     public function buttonIcon(string $icon): static
@@ -93,7 +86,7 @@ class ChatgptAgentPlugin implements Plugin
 
     public function getSendingText(): string
     {
-        return $this->sendingText;
+        return $this->sendingText ??__('chatgpt-agent::translations.sending_text');
     }
 
     public function model(string $model): static

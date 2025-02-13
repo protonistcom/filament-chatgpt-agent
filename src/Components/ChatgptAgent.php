@@ -54,7 +54,7 @@ class ChatgptAgent extends Component
 
     public function render()
     {
-        return view('filament-chatgpt-agent::livewire.chat-bot');
+        return view('chatgpt-agent::livewire.chat-bot');
     }
 
     public function sendMessage(): void
