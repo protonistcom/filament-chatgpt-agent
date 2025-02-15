@@ -59,7 +59,7 @@ composer require likeabas/filament-chatgpt-agent
 Optionally, you can publish the views:
 
 ```bash
-php artisan vendor:publish --tag="filament-chatgpt-agent-views"
+php artisan vendor:publish --tag="chatgpt-agent-views"
 ```
 
 ## Translations
@@ -67,7 +67,7 @@ php artisan vendor:publish --tag="filament-chatgpt-agent-views"
 Optionally, you can publish translations:
 
 ```bash
-php artisan vendor:publish --tag="filament-chatgpt-agent-translations"
+php artisan vendor:publish --tag="chatgpt-agent-translations"
 ```
 
 ## Usage
