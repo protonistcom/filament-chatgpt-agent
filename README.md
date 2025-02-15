@@ -158,21 +158,21 @@ You can embed the ChatGPT agent in any Blade file:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `enabled()` | `bool|Closure` | `auth()->check()` | Enables or disables the ChatGPT agent. |
-| `botName()` | `string|Closure` | `'ChatGPT Agent'` | Sets the displayed name of the bot. |
-| `buttonText()` | `string|Closure` | `'Ask ChatGPT'` | Customizes the button text. |
-| `buttonIcon()` | `string|Closure` | `'heroicon-m-sparkles'` | Defines the button icon. |
-| `sendingText()` | `string|Closure` | `'Sending...'` | Text displayed while sending a message. |
-| `model()` | `string|Closure` | `'gpt-4o-mini'` | Defines the ChatGPT model used. |
-| `temperature()` | `float|Closure` | `0.7` | Controls response randomness. Lower is more deterministic. 0-2. |
-| `maxTokens()` | `int|Closure` | `null` | Limits the token count per response. `null` is no limit. |
-| `systemMessage()` | `string|Closure` | `''` | Provides system instructions for the bot. |
-| `functions()` | `array|Closure` | `[]` | Defines callable GPT functions. See [Using Laravel GPT Functions](#using-laravel-gpt-functions) |
-| `defaultPanelWidth()` | `string|Closure` | `'350px'` | Sets the chat panel width. |
-| `pageWatcherEnabled()` | `bool|Closure` | `false` | See the [Page wachter](#page-watcher) option. |
-| `pageWatcherSelector()` | `string|Closure` | `'.fi-page'` | Sets the CSS selector for the page watcher. |
-| `pageWatcherMessage()` | `string|Closure|null` | `null` | Message displayed when the page changes. |
-| `startMessage()` | `string|bool|Closure` | `false` | Default message on panel open. Set to `false` to disable. |
+| `enabled()` | `bool,Closure` | `auth()->check()` | Enables or disables the ChatGPT agent. |
+| `botName()` | `string,Closure` | `'ChatGPT Agent'` | Sets the displayed name of the bot. |
+| `buttonText()` | `string,Closure` | `'Ask ChatGPT'` | Customizes the button text. |
+| `buttonIcon()` | `string,Closure` | `'heroicon-m-sparkles'` | Defines the button icon. |
+| `sendingText()` | `string,Closure` | `'Sending...'` | Text displayed while sending a message. |
+| `model()` | `string,Closure` | `'gpt-4o-mini'` | Defines the ChatGPT model used. |
+| `temperature()` | `float,Closure` | `0.7` | Controls response randomness. Lower is more deterministic. 0-2. |
+| `maxTokens()` | `int,Closure` | `null` | Limits the token count per response. `null` is no limit. |
+| `systemMessage()` | `string,Closure` | `''` | Provides system instructions for the bot. |
+| `functions()` | `array,Closure` | `[]` | Defines callable GPT functions. See [Using Laravel GPT Functions](#using-laravel-gpt-functions) |
+| `defaultPanelWidth()` | `string,Closure` | `'350px'` | Sets the chat panel width. |
+| `pageWatcherEnabled()` | `bool,Closure` | `false` | See the [Page wachter](#page-watcher) option. |
+| `pageWatcherSelector()` | `string,Closure` | `'.fi-page'` | Sets the CSS selector for the page watcher. |
+| `pageWatcherMessage()` | `string,Closure,null` | `null` | Message displayed when the page changes. |
+| `startMessage()` | `string,bool,Closure` | `false` | Default message on panel open. Set to `false` to disable. |
 
 ## Using Laravel GPT Functions
 
