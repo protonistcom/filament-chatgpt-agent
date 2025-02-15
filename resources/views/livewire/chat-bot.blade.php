@@ -64,7 +64,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <x-filament::avatar size="sm" :src="auth()->user()->getFilamentAvatarUrl()" />
+                                    @if(auth()->user() && method_exists(auth()->user(), 'getFilamentAvatarUrl') && auth()->user()->getFilamentAvatarUrl())
+                                        <x-filament::avatar size="sm" :src="auth()->user()?->getFilamentAvatarUrl()" />
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -310,6 +312,7 @@
         });
 
         document.addEventListener('livewire:initialized', function () {
+            var textarea = document.querySelector('#chat-input');
             el.scrollTop = el.scrollHeight;
             textarea.focus();
             el.style.paddingBottom = `${textarea.scrollHeight}px`;
