@@ -1,9 +1,9 @@
-# ChatGPT Agent for Filament
+# ChatGPT Agent for Laravel Filament
 
 Filament ChatGPT Agent is a Filament plugin that allows you to easily integrate ChatGPT into your Filament project, enabling ChatGPT to access context information from your project by creating GPT functions.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
-[![Total Downloads](https://img.shields.io/packagist/dt/icetalker/filament-chatgpt-bot.svg?style=flat-square)](https://packagist.org/packages/icetalker/filament-chatgpt-bot)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/likeabas/filament-chatgpt-agent.svg?style=flat-square)](https://packagist.org/packages/likeabas/filament-chatgpt-agent)
+[![Total Downloads](https://img.shields.io/packagist/dt/likeabas/filament-chatgpt-agent.svg?style=flat-square)](https://packagist.org/packages/likeabas/filament-chatgpt-agent)
 
 ## Features
 
