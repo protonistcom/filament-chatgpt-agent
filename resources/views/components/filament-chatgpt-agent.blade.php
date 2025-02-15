@@ -1,3 +1,5 @@
 <div>
-    @livewire('fi-chatgpt-agent')
+    @if(filament('chatgpt-agent')->isEnabled())
+        @livewire('fi-chatgpt-agent')
+    @endif
 </div>

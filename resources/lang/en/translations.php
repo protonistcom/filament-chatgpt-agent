@@ -11,4 +11,8 @@ return [
     'bot_name' => 'ChatGPT Agent',
     'button_text' => 'Ask ChatGPT',
     'sending_text' => 'Sending...',
+    'selected_text' => 'Selected text',
+    'characters' => 'characters',
+    'add_to_message' => 'Add to message',
+    'page_watcher_message' => "This is the plain text the user can see on the page, use it as additional context for the previous message:\n\n",
 ];

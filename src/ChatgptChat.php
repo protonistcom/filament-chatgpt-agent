@@ -50,6 +50,16 @@ class ChatgptChat extends GPTChat
         return filament('chatgpt-agent')->getModel();
     }
 
+    public function temperature(): ?float
+    {
+        return filament('chatgpt-agent')->getTemperature();
+    }
+
+    public function maxTokens(): ?int
+    {
+        return filament('chatgpt-agent')->getMaxTokens();
+    }
+
     public function loadMessages(array $messages): static
     {
         $this->messages = collect($messages)->map(function ($message) {

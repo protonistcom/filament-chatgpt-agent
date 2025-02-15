@@ -30,67 +30,94 @@
         </x-slot>
 
         <div id="messages"
-            style="overflow: auto;
-                    min-height: max(20rem, 30vh);
-                    max-height: calc(100vh - 11rem);
-                    padding-bottom: 1rem;
-                    margin-bottom: 65px;"
+            wire:scroll
+            wire:key="chatgpt-agent-messages"
+            style="overflow: auto; min-height: max(20rem, 30vh); max-height: calc(100vh - 11rem); padding-bottom: 1rem; margin-bottom: 65px;"
             class="flex flex-col space-y-4 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
             @foreach ($messages as $message)
                 @if ($message['role'] !== 'system')
-                    @if ($message['role'] == 'assistant')
-                        <div class="chat-message">
-                            <div class="flex items-end">
-                                <div class="flex flex-col space-y-2 text-xs mx-2 order-2 items-start">
-                                    <div>
-                                        <div
-                                            class="px-4 py-2 rounded-lg block rounded-bl-none bg-gray-300 text-gray-600">
-                                            @isset($message['content'])
+                    <div wire:key="chatgpt-agent-message-{{ $loop->index }}">
+                        @if ($message['role'] == 'assistant')
+                            <div class="chat-message">
+                                <div class="flex items-end">
+                                    <div class="flex flex-col space-y-2 text-xs mx-2 order-2 items-start">
+                                        <div>
+                                            <div class="px-4 py-2 rounded-lg block rounded-bl-none bg-gray-300 text-gray-600">
+                                                @isset($message['content'])
+                                                    {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
+                                                @endisset
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
+                                        <x-chatgpt-agent::chatgpt-svg />
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="chat-message">
+                                <div class="flex items-end justify-end">
+                                    <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                                        <div>
+                                            <div class="px-4 py-2 rounded-lg block rounded-br-none bg-blue-600 text-white">
                                                 {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
-                                            @endisset
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div
-                                    class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
-                                    <x-chatgpt-agent::chatgpt-svg />
+                                    <x-filament::avatar size="sm" :src="auth()->user()->getFilamentAvatarUrl()" />
                                 </div>
                             </div>
-                        </div>
-                    @else
-                        <div class="chat-message">
-                            <div class="flex items-end justify-end">
-                                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                                    <div>
-                                        <div class="px-4 py-2 rounded-lg block rounded-br-none bg-blue-600 text-white">
-                                            {!! \Illuminate\Mail\Markdown::parse($message['content']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                                <x-filament::avatar size="sm" :src="auth()->user()->getFilamentAvatarUrl()" />
-                            </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 @endif
             @endforeach
         </div>
-        <div
-            class="fi-section-footer border-t border-gray-200 pt-4 dark:border-white/10 absolute bottom-0 left-0 p-2 sm:p-6 bg-white dark:bg-gray-900 w-full">
+        <div class="fi-section-footer border-t border-gray-200 pt-4 dark:border-white/10 absolute bottom-0 left-0 p-2 sm:p-6 bg-white dark:bg-gray-900 w-full">
             <div class="relative">
-                <div
-                    class="flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative bg-gray-200 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-md shadow">
-                    <textarea wire:loading.attr="disabled" wire:target="sendMessage"
-                        @keydown.enter="!$event.shiftKey && ($event.preventDefault(), $wire.sendMessage())" wire:model.defer="question"
-                        tabindex="0" data-id="root" style="max-height: 200px; height: 24px; padding-right:40px;"
-                        placeholder="{{ __('chatgpt-agent::translations.send_a_message') }}" autofocus
+                <div id="selected-text-indicator" class="hidden dark:text-white p-1 rounded">
+                    <span>{{ __('chatgpt-agent::translations.selected_text') }}:</span>
+                    <span id="selected-text-characters"></span>
+                    <span> {{ __('chatgpt-agent::translations.characters') }}</span>
+                    <x-filament::button id="add-quote-button" size="xs" color="gray" class="ml-2 mb-2">
+                        {{ __('chatgpt-agent::translations.add_to_message') }}
+                    </x-filament::button>
+                </div>
+                <div class="flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative bg-gray-200 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-md shadow">
+                    <textarea x-data="{ 
+                            resize() { 
+                                $el.style.height = '48px'; 
+                                $el.style.height = `${$el.scrollHeight}px`; 
+                            }, 
+                            collapse() { 
+                                $el.style.height = '48px'; 
+                            }
+                        }"
+                        x-init="resize()"
+                        @input="resize()"
+                        @blur="collapse()"
+                        @focus="resize()"
+                        wire:loading.attr="disabled"
+                        wire:target="sendMessage"
+                        @keydown.enter="!$event.shiftKey && ($event.preventDefault(), $wire.sendMessage())"
+                        wire:model="question"
+                        tabindex="0"
+                        data-id="root"
+                        style="max-height: 200px; height: 48px; padding-right:40px;"
+                        placeholder="{{ __('chatgpt-agent::translations.send_a_message') }}"
+                        autofocus
                         class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-7 focus:ring-0 focus:outline-none focus:placeholder-gray-400 dark:bg-transparent pl-2 md:pl-0"
-                        id="chat-input"></textarea>
-                    <div class="absolute bottom-1.5 md:bottom-2.5 right-1 md:right-2">
+                        id="chat-input">
+                    </textarea>
+                    </textarea>
+                    <div class="absolute bottom-1.5 md:bottom-2.5 right-1 md:right-2" style="min-width: 25px;">
                         <x-filament::icon-button color="gray" icon="heroicon-o-paper-airplane" wire:loading.remove
                             wire:target="sendMessage" wire:click="sendMessage"
                             label="{{ __('chatgpt-agent::translations.send_message') }}" />
-                        <x-filament::loading-indicator wire:loading wire:target="sendMessage" size="md"
+                            <div>
+                        <x-filament::loading-indicator wire:target="sendMessage" size="lg"
+                            wire:loading
                             wire:target="sendMessage" />
+                            </div>
                     </div>
                 </div>
             </div>
@@ -119,7 +146,6 @@
             border-radius: 0.25rem;
         }
 
-        /* classes did not compile in Filamentphp  */
         .bg-blue-600 {
             --tw-bg-opacity: 1;
             background-color: rgb(37 99 235 / var(--tw-bg-opacity));
@@ -134,24 +160,8 @@
             margin-right: 0.5rem;
         }
 
-        .mr-3 {
-            margin-left: 0.75rem;
-        }
-
         .border-0 {
             border-width: 0px;
-        }
-
-        .border-b-2 {
-            border-bottom-width: 2px;
-        }
-
-        .border-t-2 {
-            border-top-width: 2px;
-        }
-
-        .border-2 {
-            border-width: 2px;
         }
 
         .rounded-br-right {
@@ -159,7 +169,7 @@
         }
 
         .rounded-sm {
-            border-raidus: 0.125rem;
+            border-radius: 0.125rem;
         }
 
         .p-1 {
@@ -191,7 +201,7 @@
         }
 
         .left-0 {
-            lef: 0;
+            left: 0;
         }
 
         .right-1 {
@@ -199,39 +209,126 @@
         }
 
         .md\:right-2 {
-            right: 0.5rem
+            right: 0.5rem;
         }
 
         .max-h-screen {
             max-height: 100vh;
         }
-    </style>
 
-    <script>
-        const el = document.getElementById('messages');
-        var textarea = document.querySelector('#chat-input');
-
-        window.onload = function() {
-            setTimeout(() => {
-                el.scrollTop = el.scrollHeight;
-                textarea.focus();
-                el.style.paddingBottom = `${textarea.scrollHeight}px`;
-            }, 100)
+        .chat-message blockquote {
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-left: 3px solid #ccc;
         }
 
+        .chat-message ul {
+            list-style-type: circle;
+            padding-left: 1rem;
+        }
 
-        textarea.addEventListener("input", function(e) {
-            this.style.height = "inherit";
-            this.style.height = `${this.scrollHeight}px`;
-            el.style.paddingBottom = `${this.scrollHeight}px`;
-            el.scrollTop = el.scrollHeight;
-        });
+        .chat-message ol {
+            list-style-type: decimal;
+            padding-left: 1rem;
+        }
+
+        .chat-message strong {
+            font-weight: 600;
+        }
+
+        .chat-message em {
+            font-style: italic;
+        }
+
+        .chat-message code {
+            background-color: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .chat-message pre {
+            background-color: #f4f4f4;
+            padding: 0.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .chat-message a {
+            color: #3182ce;
+            text-decoration: underline;
+        }
+
+        .chat-message a:hover {
+            color: #2c5282;
+            text-decoration: none
+        }
+    </style>
+@script
+    <script>
+        const el = document.getElementById('messages');
 
         window.addEventListener('sendmessage', event => {
             setTimeout(() => {
                 el.scrollTop = el.scrollHeight
             }, 100)
-        })
-    </script>
+        });
 
+        // Handle text selection
+        document.addEventListener('mouseup', function() {
+            const selectedText = window.getSelection().toString().trim();
+            const selectedTextIndicator = document.getElementById('selected-text-indicator');
+            const selectedTextCharacters = document.getElementById('selected-text-characters');
+
+            if (selectedText) {
+                selectedTextCharacters.innerText = selectedText.length;
+                selectedTextIndicator.classList.remove('hidden');
+                selectedTextIndicator.dataset.selectedText = selectedText;
+            } else {
+                selectedTextIndicator.classList.add('hidden');
+                selectedTextIndicator.dataset.selectedText = '';
+            }
+        });
+
+        // Add quote to textarea
+        document.getElementById('add-quote-button').addEventListener('click', function() {
+            const selectedTextIndicator = document.getElementById('selected-text-indicator');
+            const selectedText = selectedTextIndicator.dataset.selectedText;
+            var textarea = document.querySelector('#chat-input');
+            if (selectedText) {
+                const quotedText = selectedText.split('\n').map(line => `> ${line}`).join('\n');
+                @this.set('question', @this.get('question') + `\n${quotedText}\n`).then(() => {
+                    textarea.style.height = "inherit";
+                    textarea.style.height = `${textarea.scrollHeight}px`;
+                    el.style.paddingBottom = `${textarea.scrollHeight}px`;
+                    el.scrollTop = el.scrollHeight;
+                    textarea.focus();
+                    window.getSelection().removeAllRanges();
+                });
+                selectedTextIndicator.classList.add('hidden');
+                selectedTextIndicator.dataset.selectedText = '';
+            }
+        });
+
+        document.addEventListener('livewire:initialized', function () {
+            el.scrollTop = el.scrollHeight;
+            textarea.focus();
+            el.style.paddingBottom = `${textarea.scrollHeight}px`;
+
+            if ({{ $pageWatcherEnabled }}) {
+                function updateQuestionContext() {
+                    const element = document.querySelector("{{ $pageWatcherSelector }}");
+                    if (element) {
+                        const context = element.innerText;
+                        const value = context + "\nPage URL: " + window.location.href;
+                        @this.set('questionContext', value);
+                    }
+                }
+
+                updateQuestionContext();
+                setInterval(updateQuestionContext, 5000); 
+            }
+        });
+    </script>
+@endscript
 </div>
+

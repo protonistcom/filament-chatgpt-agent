@@ -3,6 +3,7 @@
 namespace LikeABas\FilamentChatgptAgent\Components;
 
 use LikeABas\FilamentChatgptAgent\ChatgptChat;
+use Livewire\Attributes\Session;
 use Livewire\Component;
 
 class ChatgptAgent extends Component
@@ -18,7 +19,14 @@ class ChatgptAgent extends Component
 
     public array $messages;
 
+    #[Session]
     public string $question;
+
+    public string $questionContext;
+
+    public string $pageWatcherEnabled;
+
+    public string $pageWatcherSelector;
 
     public string $winWidth;
 
@@ -50,6 +58,9 @@ class ChatgptAgent extends Component
         $this->buttonText = filament('chatgpt-agent')->getButtonText();
         $this->buttonIcon = filament('chatgpt-agent')->getButtonIcon();
         $this->sendingText = filament('chatgpt-agent')->getSendingText();
+        $this->questionContext = '';
+        $this->pageWatcherEnabled = filament('chatgpt-agent')->isPageWatcherEnabled();
+        $this->pageWatcherSelector = filament('chatgpt-agent')->getPageWatcherSelector();
     }
 
     public function render()
@@ -110,6 +121,11 @@ class ChatgptAgent extends Component
     {
         $chat = new ChatgptChat();
         $chat->loadMessages($this->messages);
+        if ($this->pageWatcherEnabled) {
+            $chat->addMessage(filament('chatgpt-agent')->getPageWatcherMessage() . $this->questionContext);
+            \Log::info($this->questionContext);
+        }
+
         $chat->send();
 
         $this->messages[] = ['role' => 'assistant', 'content' => $chat->latestMessage()->content];
