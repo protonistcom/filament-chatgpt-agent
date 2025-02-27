@@ -173,6 +173,7 @@ You can embed the ChatGPT agent in any Blade file:
 | `pageWatcherSelector()` | `string,Closure` | `'.fi-page'` | Sets the CSS selector for the page watcher. |
 | `pageWatcherMessage()` | `string,Closure,null` | `null` | Message displayed when the page changes. |
 | `startMessage()` | `string,bool,Closure` | `false` | Default message on panel open. Set to `false` to disable. |
+| `logoUrl()` | `string,bool,Closure` | `false` | Overwrite the chat avatar / logo. Set to `false` to show a default GPT icon. |
 
 ## Using Laravel GPT Functions
 

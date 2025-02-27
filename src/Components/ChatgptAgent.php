@@ -36,6 +36,8 @@ class ChatgptAgent extends Component
 
     public bool $panelHidden;
 
+    public string|bool $logoUrl;
+
     private string $sessionKey;
 
     public function __construct()
@@ -61,6 +63,7 @@ class ChatgptAgent extends Component
         $this->questionContext = '';
         $this->pageWatcherEnabled = filament('chatgpt-agent')->isPageWatcherEnabled();
         $this->pageWatcherSelector = filament('chatgpt-agent')->getPageWatcherSelector();
+        $this->logoUrl = filament('chatgpt-agent')->getLogoUrl();
     }
 
     public function render()

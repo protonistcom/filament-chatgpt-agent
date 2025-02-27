@@ -49,9 +49,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
-                                        <x-chatgpt-agent::chatgpt-svg />
-                                    </div>
+                                
+                                    @if($logoUrl && $logoUrl !== '')
+                                        <img src="{{ $logoUrl }}" alt="{{ $name }}" width="41" height="41" class="relative h-7 w-7 p-1 rounded-full" />
+                                    @else
+                                        <div class="relative h-5 w-5 p-1 rounded-full text-white flex items-center justify-center bg-primary-500">
+                                            <x-chatgpt-agent::chatgpt-svg />
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @else
