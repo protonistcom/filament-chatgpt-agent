@@ -22,7 +22,8 @@ class ChatgptAgentPlugin implements Plugin
     protected string|Closure $pageWatcherSelector = '.fi-page';
     protected string|Closure|null $pageWatcherMessage = null;
     protected string|Closure $defaultPanelWidth = '350px';
-    protected bool|Closure|null $startMessage = false;
+    protected bool|string|Closure|null $startMessage = false;
+    protected bool|string|Closure|null $logoUrl = false;
 
     public static function make(): static
     {
@@ -285,5 +286,21 @@ class ChatgptAgentPlugin implements Plugin
         }
 
         return $this->startMessage;
+    }
+
+    public function logoUrl(string|bool|Closure $url): static
+    {
+        $this->logoUrl = ($url === false || $url === '') ? false : $url;
+
+        return $this;
+    }
+
+    public function getLogoUrl(): string
+    {
+        if (is_callable($this->logoUrl)) {
+            return ($this->logoUrl)();
+        }
+
+        return $this->logoUrl;
     }
 }
