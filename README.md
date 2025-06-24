@@ -38,7 +38,7 @@ You need to have [Laravel GPT from Malkuhr](https://github.com/maltekuhr/laravel
 You can install the package via composer:
 
 ```bash
-composer require maltekuhr/laravel-gpt:^0.15
+composer require maltekuhr/laravel-gpt:^0.1.5
 ```
 
 Next you need to configure your OpenAI API Key and Organization ID. You can find both in the [OpenAI Dashboard](https://platform.openai.com/account/org-settings).
